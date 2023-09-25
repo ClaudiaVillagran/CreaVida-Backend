@@ -8,12 +8,15 @@ const eventSchema = Schema ({
         type: Date,
         required: true,
       },
-      image: {
-        data: Buffer, // Almacenará los datos binarios de la imagen
-        contentType: String, // El tipo MIME de la imagen (por ejemplo, 'image/jpeg')
-      },
+      image: String,
       location: String,
-      description: String
+      description: String,
+      members:[
+        {
+        type: Schema.Types.ObjectId,
+        ref: 'Member'
+        }
+      ]
 });
 
 module.exports = model("Event", eventSchema);

@@ -10,6 +10,7 @@ async function createEvent(req, res) {
       date,
       location,
       description,
+      image: '/uploads/' + req.files.image.name
     });
     console.log(newEvent);
     const savedEvent = await newEvent.save();
