@@ -29,10 +29,13 @@ app.use(express.urlencoded({ extended: true }));
 const userRoutes= require('./routes/user');
 const eventRoutes= require('./routes/event');
 const donationRoutes= require('./routes/donation');
+const memberRoutes= require('./routes/member');
 
 app.use('/api/user', userRoutes);
 app.use('/api/event', eventRoutes);
 app.use('/api/donation', donationRoutes);
+app.use('/api/member', memberRoutes);
+
 
 app.listen(process.env.PORT, () => {
   console.log("Servidor de node corriendo en el puerto:", process.env.PORT);

@@ -9,8 +9,7 @@ async function createEvent(req, res) {
       title,
       date,
       location,
-      description,
-      image: '/uploads/' + req.files.image.name
+      description
     });
     console.log(newEvent);
     const savedEvent = await newEvent.save();
@@ -39,14 +38,14 @@ async function getEvents(req, res) {
 async function getEventById(req, res) {
   const eventId = req.params.id;
   try {
-    const event = await Event.findById(eventId);
+    const event = await Event.findById(eventId).populate('members');
     if (!event) {
       return res.status(404).json({ message: "Evento no encontrado" });
     }
     res.status(200).json({
       status: "success",
       message: "Datos del evento",
-      event,
+      event
     });
   } catch (error) {
     res.status(500).json({ message: "Error al obtener el evento", error });

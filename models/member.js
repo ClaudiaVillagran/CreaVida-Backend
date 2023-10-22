@@ -11,12 +11,14 @@ const memberSchema = new Schema({
     },
     age:{
         type: Number,
-        required: true
     },
     email: {
         type: String,
         required: true,
-        unique: true,
+    },
+    number:{
+        type: Number,
+        required: true
     },
     message: {
         type: String
