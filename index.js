@@ -30,11 +30,14 @@ const userRoutes= require('./routes/user');
 const eventRoutes= require('./routes/event');
 const donationRoutes= require('./routes/donation');
 const memberRoutes= require('./routes/member');
+const socioRoutes= require('./routes/socio');
 
 app.use('/api/user', userRoutes);
 app.use('/api/event', eventRoutes);
 app.use('/api/donation', donationRoutes);
 app.use('/api/member', memberRoutes);
+app.use('/api/socio', socioRoutes);
+
 
 
 app.listen(process.env.PORT, () => {

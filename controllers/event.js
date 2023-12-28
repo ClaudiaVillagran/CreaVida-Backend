@@ -1,13 +1,14 @@
 const Event = require("../models/event");
 
 async function createEvent(req, res) {
-  const { title, date, location, description } = req.body;
+  const { title, date,picture, location, description } = req.body;
 
   try {
     console.log(title, date)
     const newEvent = new Event({
       title,
       date,
+      picture,
       location,
       description
     });
