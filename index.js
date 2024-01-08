@@ -31,13 +31,18 @@ const eventRoutes= require('./routes/event');
 const donationRoutes= require('./routes/donation');
 const memberRoutes= require('./routes/member');
 const socioRoutes= require('./routes/socio');
+const paymentRoutes = require('./routes/paymentTransbank');
+// const returnRoutes = require('./routes/returnTransbank');
 
 app.use('/api/user', userRoutes);
 app.use('/api/event', eventRoutes);
 app.use('/api/donation', donationRoutes);
 app.use('/api/member', memberRoutes);
 app.use('/api/socio', socioRoutes);
-
+// Rutas de pago
+app.use('/api/payment', paymentRoutes);
+// Rutas de retorno
+// app.use('/api/return', returnRoutes);
 
 
 app.listen(process.env.PORT, () => {
