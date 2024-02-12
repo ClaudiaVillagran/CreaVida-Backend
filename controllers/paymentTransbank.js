@@ -11,7 +11,7 @@ const startPayment = async (req, res) => {
   console.log(req.body);
   let amount = req.body.amount
   console.log(amount);
-  const returnUrl = "http://localhost:5173/confirmation-payment"; // URL de retorno
+  const returnUrl = "http://www.fcreavida.cl/confirmation-payment"; // URL de retorno
 
   let sessionId = uuid.v4();
   let buyOrder = "buyOrder" + Date.now();
@@ -34,6 +34,7 @@ const startPayment = async (req, res) => {
     );
 
     const response = await tx.create(buyOrder, sessionId, amount, returnUrl);
+    console.log(response.token);
     res.status(200).json({ url: response.url, token: response.token });
   } catch (error) {
     console.error("Error al iniciar la transacción:", error);
