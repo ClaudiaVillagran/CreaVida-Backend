@@ -8,7 +8,11 @@ dotenv.config();
 console.log("a",dotenv.config)
 
 mongoose
-  .connect(process.env.DB)
+  .connect(process.env.DB, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    ssl: true
+  })
   .then(() => {
     console.log("conexion exitosa");
   })

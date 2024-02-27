@@ -16,11 +16,11 @@ const startPayment = async (req, res) => {
   let sessionId = uuid.v4();
   let buyOrder = "buyOrder" + Date.now();
 
-   const commerceCode = '597050513381'; // Reemplazar con tu código de comercio de producción
-  const apiKey = '515bda59-40b0-483f-acd0-6d305bc183af';
+   WebpayPlus.commerceCode = 597050513381;
+  WebpayPlus.apiKey =
+    "515bda59-40b0-483f-acd0-6d305bc183af";
   WebpayPlus.environment = Environment.Production;
 
-WebpayPlus.configureForProduction(commerceCode, apiKey);
   try {
    // console.log(buyOrder);
     //console.log(sessionId);
@@ -28,8 +28,8 @@ WebpayPlus.configureForProduction(commerceCode, apiKey);
     const tx = new WebpayPlus.Transaction(
       new Options(
         IntegrationCommerceCodes.WEBPAY_PLUS,
-        null,
-        Environment.Production
+        IntegrationApiKeys.WEBPAY,
+        Environment.Integration
       )
     );
 
@@ -49,8 +49,8 @@ const confirmPayment = async (req, res) => {
     const tx = new WebpayPlus.Transaction(
       new Options(
         IntegrationCommerceCodes.WEBPAY_PLUS,
-        null,
-        Environment.Production
+        IntegrationApiKeys.WEBPAY,
+        Environment.Integration
       )
     );
 
