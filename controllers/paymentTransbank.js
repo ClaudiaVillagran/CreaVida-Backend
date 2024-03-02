@@ -4,32 +4,31 @@ const {
   IntegrationApiKeys,
   Environment,
   IntegrationCommerceCodes,
+
 } = require("transbank-sdk"); // CommonJS
 const uuid = require("uuid");
 // Controlador para iniciar una transacción
 const startPayment = async (req, res) => {
-  console.log(req.body);
   let amount = req.body.amount
   console.log(amount);
-  const returnUrl = "http://www.fcreavida.cl/confirmation-payment"; // URL de retorno
+  const returnUrl = "https://www.fcreavida.cl/confirmation-payment"; // URL de retorno
 
   let sessionId = uuid.v4();
   let buyOrder = "buyOrder" + Date.now();
 
-  WebpayPlus.commerceCode = 597055555532;
-  WebpayPlus.apiKey =
-    "579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C";
-  WebpayPlus.environment = Environment.Integration;
+  WebpayPlus.commerceCode = 597050513381;
+  WebpayPlus.apiKey = '515bda59-40b0-483f-acd0-6d305bc183af';
+  WebpayPlus.environment = Environment.Production;
 
   try {
-    console.log(buyOrder);
-    console.log(sessionId);
-    console.log(amount);
+    // console.log(buyOrder);
+    // console.log(sessionId);
+    // console.log(amount);
     const tx = new WebpayPlus.Transaction(
       new Options(
         IntegrationCommerceCodes.WEBPAY_PLUS,
         IntegrationApiKeys.WEBPAY,
-        Environment.Integration
+        Environment.Production
       )
     );
 
@@ -50,7 +49,7 @@ const confirmPayment = async (req, res) => {
       new Options(
         IntegrationCommerceCodes.WEBPAY_PLUS,
         IntegrationApiKeys.WEBPAY,
-        Environment.Integration
+        Environment.Production
       )
     );
 
@@ -77,15 +76,11 @@ const confirmPayment = async (req, res) => {
         balance: response.balance,
       };
 
-      // Realizar acciones necesarias con la información de la transacción
-      // Puedes enviar la información a la vista o almacenarla en la base de datos, según tus necesidades
-
       res.status(200).json({
         status: "success",
         transactionInfo,
       });
     } else {
-      // La transacción no fue aprobada
       res.status(200).json({
         status: "failed",
         responseCode: response.responseCode,
@@ -95,10 +90,6 @@ const confirmPayment = async (req, res) => {
   } catch (error) {
     console.error("Error al confirmar transacción:", error);
 
-    // Manejar errores específicos de Transbank
-    if (error instanceof TransbankError) {
-      console.error("Detalles específicos de Transbank:", error.details);
-    }
 
     res.status(500).send("Error interno del servidor");
   }

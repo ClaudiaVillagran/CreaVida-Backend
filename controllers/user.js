@@ -37,7 +37,7 @@ async function register(req, res) {
 
 async function login(req, res) {
     const { email, password } = req.body;
-
+    console.log(email, password);
     try {
         // Buscar al usuario por su email en la base de datos
         const user = await User.findOne({ email });
@@ -50,29 +50,28 @@ async function login(req, res) {
         // Comparar la contraseña proporcionada con la contraseña encriptada almacenada en la base de datos
         const isPasswordValid = await bcrypt.compare(password, user.password);
 
-        console.log(isPasswordValid)
-        console.log(user.password)
+        // console.log(isPasswordValid)
+        // console.log(user.password)
 
         if (!isPasswordValid) {
             return res.status(401).json({ message: 'Contraseña incorrecta' });
         }
         //TOKEN DE AUTH
-        console.log('hola')
         const payload = {
             userId: user._id,
             username: user.username,
-            role: user.role
         };
 
-        console.log('hola')
+        // console.log('hola')
         console.log(payload)
-        const token = jwt.sign(payload, secretKey, { expiresIn: '5h' });
-
+        const token = jwt.sign(payload, secretKey);
+        console.log(token);
         res.json({
             status: 'success',
             message: 'Inicio de sesión exitoso',
             token
         });
+        console.log('object');
 
     } catch (error) {
         res.status(500).json({ message: 'Error en el servidor' });
@@ -100,7 +99,6 @@ async function updateUser(req, res) {
             const hashedPassword = await bcrypt.hash(password, 10);
             user.password = hashedPassword;
         }
-
         // Guardar los cambios en la base de datos
         await user.save();
 
@@ -130,20 +128,26 @@ async function deleteUser(req, res) {
 }
 
 async function findUser(req, res) {
-    const userId = req.params.id;
-
-    try {
-        // Buscar al usuario en la base de datos por su ID
-        const user = await User.findById(userId);
-        console.log('user',user);
-
+    const userToken = req.params.token;
+    
+    const secretKey = process.env.JWT_SECRET;
+    try {   
+        console.log(userToken);
+        // Verificar y decodificar el token para obtener la información del usuario
+        const decodedToken = jwt.verify(userToken, secretKey); // 'secret' debe ser la misma clave secreta utilizada para firmar el token
+        console.log(decodedToken);
+        // Buscar al usuario en la base de datos utilizando la información del token
+        const user = await User.findById(decodedToken.userId);
+        console.log(user);
         if (!user) {
             return res.status(404).json({ message: 'Usuario no encontrado' });
         }
 
+        // Si el usuario es encontrado, responder con los datos del usuario
         res.json(user);
     } catch (error) {
-        res.status(500).json({ message: 'Error en el servidor' });
+        // Manejar errores de verificación o búsqueda de usuario
+        res.status(500).json({ message: 'Error en el servidor', error: error.message });
     }
 }
 

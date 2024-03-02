@@ -5,7 +5,7 @@ const api = express.Router();
 
 api.post('/register', user.register);
 api.post('/login', user.login);
-api.get('/findUser/:id',verifyToken, user.findUser);
+api.get('/findUser/:token', user.findUser);
 api.delete('/deleteUser/:id',verifyToken, user.deleteUser);
 api.put('/updateUser/:id',verifyToken, user.updateUser);
 
