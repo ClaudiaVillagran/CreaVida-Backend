@@ -16,24 +16,22 @@ const startPayment = async (req, res) => {
   let sessionId = uuid.v4();
   let buyOrder = "buyOrder" + Date.now();
 
-   const commerceCode = '597050513381'; // Reemplazar con tu código de comercio de producción
+  const commerceCode = 597050513381;
   const apiKey = '515bda59-40b0-483f-acd0-6d305bc183af';
   WebpayPlus.environment = Environment.Production;
-
 WebpayPlus.configureForProduction(commerceCode, apiKey);
   try {
    // console.log(buyOrder);
     //console.log(sessionId);
     //console.log(amount);
-    const tx = new WebpayPlus.Transaction(
-      new Options(
-        IntegrationCommerceCodes.WEBPAY_PLUS,
-        null,
-        Environment.Production
-      )
-    );
+    
+    const response = await (new WebpayPlus.Transaction()).create(
+  buyOrder, 
+  sessionId, 
+  amount, 
+  returnUrl
+);
 
-    const response = await tx.create(buyOrder, sessionId, amount, returnUrl);
     console.log(response.token);
     res.status(200).json({ url: response.url, token: response.token });
   } catch (error) {
@@ -44,18 +42,16 @@ WebpayPlus.configureForProduction(commerceCode, apiKey);
 
 const confirmPayment = async (req, res) => {
   const { token_ws } = req.body;
-
+const commerceCode = 597050513381;
+  const apiKey = '515bda59-40b0-483f-acd0-6d305bc183af';
+  WebpayPlus.environment = Environment.Production;
+WebpayPlus.configureForProduction(commerceCode, apiKey);
   try {
-    const tx = new WebpayPlus.Transaction(
-      new Options(
-        IntegrationCommerceCodes.WEBPAY_PLUS,
-        null,
-        Environment.Production
-      )
-    );
+       const response = await (new WebpayPlus.Transaction()).commit(
+  	token_ws
+	);
 
-    const response = await tx.commit(token_ws);
-
+    
     // console.log(response);
 
     if (response.response_code === 0 && response.status === "AUTHORIZED") {

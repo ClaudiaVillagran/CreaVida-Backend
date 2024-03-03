@@ -24,7 +24,9 @@ console.log("API exitosa");
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+	origin: '*',
+}));
 app.use(fileUpload());
 
 app.use(express.json());
