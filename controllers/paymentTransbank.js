@@ -15,17 +15,25 @@ const startPayment = async (req, res) => {
   let sessionId = uuid.v4();
   let buyOrder = "buyOrder" + Date.now();
 
-  WebpayPlus.commerceCode = 597050513381;
-  WebpayPlus.apiKey = "515bda59-40b0-483f-acd0-6d305bc183af";
+  const commerceCode = 597050513381;
+  const apiKey = "515bda59-40b0-483f-acd0-6d305bc183af";
   WebpayPlus.environment = Environment.Production;
 
+  WebpayPlus.configureForProduction(commerceCode, apiKey);
   try {
-    const tx = new WebpayPlus.Transaction(
-      new Options(
-        IntegrationCommerceCodes.WEBPAY_PLUS,
-        IntegrationApiKeys.WEBPAY,
-        Environment.Production
-      )
+    // const tx = new WebpayPlus.Transaction(
+    //   new Options(
+    //     IntegrationCommerceCodes.WEBPAY_PLUS,
+    //     IntegrationApiKeys.WEBPAY,
+    //     Environment.Production
+    //   )
+    // );
+
+    const response = await new WebpayPlus.Transaction().create(
+      buyOrder,
+      sessionId,
+      amount,
+      returnUrl
     );
     console.log(response.token);
     res.status(200).json({ url: response.url, token: response.token });
@@ -39,16 +47,16 @@ const confirmPayment = async (req, res) => {
   const { token_ws } = req.body;
   const commerceCode = 597050513381;
   const apiKey = "515bda59-40b0-483f-acd0-6d305bc183af";
-  WebpayPlus.environment = Environment.Production;
+  // WebpayPlus.environment = Environment.Production;
   WebpayPlus.configureForProduction(commerceCode, apiKey);
   try {
-    const tx = new WebpayPlus.Transaction(
-      new Options(
-        IntegrationCommerceCodes.WEBPAY_PLUS,
-        IntegrationApiKeys.WEBPAY,
-        Environment.Production
-      )
-    );
+    // const tx = new WebpayPlus.Transaction(
+    //   new Options(
+    //     IntegrationCommerceCodes.WEBPAY_PLUS,
+    //     IntegrationApiKeys.WEBPAY,
+    //     Environment.Production
+    //   )
+    // );
     const response = await new WebpayPlus.Transaction().commit(token_ws);
 
     // console.log(response);
