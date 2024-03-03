@@ -4,11 +4,11 @@ const {
   IntegrationApiKeys,
   Environment,
   IntegrationCommerceCodes,
-
 } = require("transbank-sdk"); // CommonJS
 const uuid = require("uuid");
 // Controlador para iniciar una transacción
 const startPayment = async (req, res) => {
+  console.log(req.body);
   let amount = req.body.amount
   console.log(amount);
   const returnUrl = "https://www.fcreavida.cl/confirmation-payment"; // URL de retorno
@@ -16,40 +16,24 @@ const startPayment = async (req, res) => {
   let sessionId = uuid.v4();
   let buyOrder = "buyOrder" + Date.now();
 
-<<<<<<< HEAD
-  WebpayPlus.commerceCode = 597050513381;
-  WebpayPlus.apiKey = '515bda59-40b0-483f-acd0-6d305bc183af';
+   WebpayPlus.commerceCode = 597050513381;
+  WebpayPlus.apiKey =
+    "515bda59-40b0-483f-acd0-6d305bc183af";
   WebpayPlus.environment = Environment.Production;
 
-  try {
-    // console.log(buyOrder);
-    // console.log(sessionId);
-    // console.log(amount);
-    const tx = new WebpayPlus.Transaction(
-      new Options(
-        IntegrationCommerceCodes.WEBPAY_PLUS,
-        IntegrationApiKeys.WEBPAY,
-        Environment.Production
-      )
-    );
-=======
-  const commerceCode = 597050513381;
-  const apiKey = '515bda59-40b0-483f-acd0-6d305bc183af';
-  WebpayPlus.environment = Environment.Production;
-WebpayPlus.configureForProduction(commerceCode, apiKey);
   try {
    // console.log(buyOrder);
     //console.log(sessionId);
     //console.log(amount);
-    
-    const response = await (new WebpayPlus.Transaction()).create(
-  buyOrder, 
-  sessionId, 
-  amount, 
-  returnUrl
-);
->>>>>>> 4c6ebc1505b11e94468e0d02fd4f8ee536e54316
+    const tx = new WebpayPlus.Transaction(
+      new Options(
+        IntegrationCommerceCodes.WEBPAY_PLUS,
+        IntegrationApiKeys.WEBPAY,
+        Environment.Integration
+      )
+    );
 
+    const response = await tx.create(buyOrder, sessionId, amount, returnUrl);
     console.log(response.token);
     res.status(200).json({ url: response.url, token: response.token });
   } catch (error) {
@@ -60,28 +44,18 @@ WebpayPlus.configureForProduction(commerceCode, apiKey);
 
 const confirmPayment = async (req, res) => {
   const { token_ws } = req.body;
-const commerceCode = 597050513381;
-  const apiKey = '515bda59-40b0-483f-acd0-6d305bc183af';
-  WebpayPlus.environment = Environment.Production;
-WebpayPlus.configureForProduction(commerceCode, apiKey);
+
   try {
-<<<<<<< HEAD
     const tx = new WebpayPlus.Transaction(
       new Options(
         IntegrationCommerceCodes.WEBPAY_PLUS,
         IntegrationApiKeys.WEBPAY,
-        Environment.Production
+        Environment.Integration
       )
     );
 
     const response = await tx.commit(token_ws);
-=======
-       const response = await (new WebpayPlus.Transaction()).commit(
-  	token_ws
-	);
->>>>>>> 4c6ebc1505b11e94468e0d02fd4f8ee536e54316
 
-    
     // console.log(response);
 
     if (response.response_code === 0 && response.status === "AUTHORIZED") {
@@ -103,11 +77,15 @@ WebpayPlus.configureForProduction(commerceCode, apiKey);
         balance: response.balance,
       };
 
+      // Realizar acciones necesarias con la información de la transacción
+      // Puedes enviar la información a la vista o almacenarla en la base de datos, según tus necesidades
+
       res.status(200).json({
         status: "success",
         transactionInfo,
       });
     } else {
+      // La transacción no fue aprobada
       res.status(200).json({
         status: "failed",
         responseCode: response.responseCode,
@@ -117,6 +95,10 @@ WebpayPlus.configureForProduction(commerceCode, apiKey);
   } catch (error) {
     console.error("Error al confirmar transacción:", error);
 
+    // Manejar errores específicos de Transbank
+    if (error instanceof TransbankError) {
+      console.error("Detalles específicos de Transbank:", error.details);
+    }
 
     res.status(500).send("Error interno del servidor");
   }
