@@ -76,7 +76,7 @@ async function updateEvent(req, res) {
 
 async function deleteEvent(req, res) {
   const eventId = req.params.id;
-
+  
   try {
     const deletedEvent = await Event.findByIdAndDelete(eventId);
     if (!deletedEvent) {

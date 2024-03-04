@@ -6,8 +6,8 @@ const api = express.Router();
 api.post('/register', event.createEvent);
 api.get('/getEvents', event.getEvents);
 api.get('/getEvent/:id', event.getEventById);
-api.put('/updateEvent/:id',verifyToken, event.updateEvent);
-api.delete('/deleteEvent/:id',verifyToken, event.deleteEvent);
+api.put('/updateEvent/:id', event.updateEvent);
+api.delete('/deleteEvent/:id', event.deleteEvent);
 api.post('/upload', (req, res) => {
     console.log("req.files")
     if (!req.files || Object.keys(req.files).length === 0) {
